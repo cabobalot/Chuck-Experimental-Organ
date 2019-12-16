@@ -11,6 +11,7 @@ Hid kb;
 HidMsg msg;
 
 // which keyboard
+// number of the device to open (see: chuck --probe)
 0 => int device;
 // get from command line
 if( me.args() ) me.arg(0) => Std.atoi => device;

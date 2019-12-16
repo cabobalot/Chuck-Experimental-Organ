@@ -15,7 +15,7 @@ public class Stop {
 			(Std.mtof(i) * harmNum) => notes[i].freq;
 		}
 
-		<<< "Stop.setup" >>>;
+		<<< "Stop.setup" , harmNum >>>;
 	}
 
 	fun void startNote(int number) {
