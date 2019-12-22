@@ -13,11 +13,19 @@ public class Stop {
 	fun void setup(Gain g, int harmonic) {
 		harmonic => harmNum;
 		g @=> gain;
-
-		for (0 => int i; i < notes.cap(); i++) {
-			(Std.mtof(i) * harmNum) => notes[i].freq;
-			0 => noteStates[i];
+		if (harmonic > 0) {
+			for (0 => int i; i < notes.cap(); i++) {
+				(Std.mtof(i) * harmNum) => notes[i].freq;
+				0 => noteStates[i];
+			}
 		}
+		else {
+			for (0 => int i; i < notes.cap(); i++) {
+				((Std.mtof(i) * 4) / (-harmNum)) => notes[i].freq;
+				0 => noteStates[i];
+			}
+		}
+		
 
 		<<< "Stop.setup" , harmNum >>>;
 	}

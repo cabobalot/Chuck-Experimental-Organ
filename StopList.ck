@@ -36,14 +36,19 @@ public class StopList {
 		for (0 => int i; i < stops.cap(); i++) {
 			stops[i].startNote(note);
 		}
-		1 => noteStates[note];
+		if ((note > 0) && (note < noteStates.cap())) {
+			1 => noteStates[note];
+		}
+		
 	}
 
 	fun void stopNote(int note) {
 		for (0 => int i; i < stops.cap(); i++) {
 			stops[i].stopNote(note);
 		}
-		0 => noteStates[note];
+		if ((note > 0) && (note < noteStates.cap())) {
+			0 => noteStates[note];
+		}
 	}
 
 	fun Stop at(int i) {
