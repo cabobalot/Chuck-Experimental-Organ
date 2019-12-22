@@ -62,18 +62,6 @@ fun int keyboardHandler() {
 			if(msg.isButtonDown()) {
 				msg.which => int dataNum;
 				<<< "key down: ",  dataNum >>>;
-				// if (dataNum == 71) {
-				// 	stoplist.setStopActive(0, true);
-				// }
-				// else if (dataNum == 72) {
-				// 	stoplist.setStopActive(0, false);
-				// }
-				// else if (dataNum == 75) {
-				// 	stoplist.setStopActive(1, true);
-				// }
-				// else if (dataNum == 76) {
-				// 	stoplist.setStopActive(1, false);
-				// }
 
 				40 +=> dataNum;
 				stoplist.playNote(dataNum);

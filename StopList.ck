@@ -6,42 +6,44 @@ public class StopList {
 	0 => int STOP_COUNT;
 	Stop @ stops[STOP_COUNT];
 
-	int isActivated[STOP_COUNT];
+	200 => int NUM_NOTES;
+	int noteStates[NUM_NOTES];
 
-	
 
-	// Stop p8 @=> stops[0];
-	// Stop p4 @=> stops[1];
 
 	fun void giveGain(Gain g) {
 		g @=> gain;
 
 		readStopFile();
-
-		// p8.setup(g, 1);
-		// p4.setup(g, 2);
 	}
 
 	fun void setStopActive(int stopNum, int setVal) {
-		setVal => isActivated[stopNum];
-
-		if (setVal == 0) {
-			stops[stopNum].stopAllNotes();
+		if (setVal == 1) {
+			stops[stopNum].activate();
+			for (0 => int i; i < noteStates.cap(); i++) {
+				if (noteStates[i]) {
+					stops[stopNum].startNote(i);
+				}
+			}
 		}
+		if (setVal == 0) {
+			stops[stopNum].deactivate();
+		}
+		
 	}
 
 	fun void playNote(int note) {
 		for (0 => int i; i < stops.cap(); i++) {
-			if (isActivated[i]) {
-				stops[i].startNote(note);
-			}
+			stops[i].startNote(note);
 		}
+		1 => noteStates[note];
 	}
 
 	fun void stopNote(int note) {
 		for (0 => int i; i < stops.cap(); i++) {
 			stops[i].stopNote(note);
 		}
+		0 => noteStates[note];
 	}
 
 	fun Stop at(int i) {
@@ -66,9 +68,6 @@ public class StopList {
 
 			Stop newStop;
 			newStop.setup(gain, harmonic);
-			
-			//push back
-			isActivated << 0;
 
 			(stops.cap() + 1) => stops.size;
 			newStop @=> stops[stops.cap() - 1];
