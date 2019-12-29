@@ -6,19 +6,18 @@ Gain gain => dac;
 StopList stoplist;
 stoplist.giveGain(gain);
 
-// HID
-Hid kb;
-HidMsg msg;
-
-// which keyboard
-// number of the device to open (see: chuck --probe)
+// number of the MIDI device to open (see: chuck --probe)
 0 => int device;
-// get from command line
+// get command line
 if( me.args() ) me.arg(0) => Std.atoi => device;
+// the midi event
+MidiIn min;
+// the message for retrieving data
+MidiMsg msg;
 
-// open keyboard (get device number from command line)
-if( !kb.openKeyboard( device ) ) me.exit();
-<<< "keyboard '" + kb.name() + "' ready", "" >>>;
+// open the device
+if( !min.open( device ) ) me.exit();
+<<< "MIDI device:", min.num(), " -> ", min.name() >>>;
 
 
 spork ~ keyboardHandler();
@@ -56,22 +55,20 @@ fun int stopOSCHandler() {
 fun int keyboardHandler() {
 	while(true) {
 		// wait on kbhit event
-		kb => now;
+		min => now;
 		// potentially more than 1 key at a time
-		while(kb.recv(msg)) {
-			if(msg.isButtonDown()) {
-				msg.which => int dataNum;
-				<<< "key down: ",  dataNum >>>;
-
-				40 +=> dataNum;
-				stoplist.playNote(dataNum);
-
-			}
-			else {
-				msg.which => int dataNum;
-				<<< "key up: ",  dataNum >>>;
-				40 +=> dataNum;
-				stoplist.stopNote(dataNum);
+		while(min.recv(msg)) {
+			if(msg.data1 == 144) { // keyboard note event
+				msg.data2 => int noteNum;
+				
+				if (msg.data3 > 0) {
+					<<< "key down: ",  noteNum >>>;
+					stoplist.playNote(noteNum);
+				}
+				else {
+					<<< "key up: ",  noteNum >>>;
+					stoplist.stopNote(noteNum);
+				}
 			}
 		}
 	}
