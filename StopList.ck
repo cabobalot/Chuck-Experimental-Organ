@@ -66,13 +66,17 @@ public class StopList {
 		string val;
 		string trash;
 		int harmonic;
+		int baseNumber;
+		float volume;
 		while( file => trash ) {
 			file => trash;
+			file => baseNumber;
 			file => harmonic;
+			file => volume;
 			file => trash;
 
 			Stop newStop;
-			newStop.setup(gain, harmonic);
+			newStop.setup(gain, baseNumber, harmonic, volume);
 
 			(stops.cap() + 1) => stops.size;
 			newStop @=> stops[stops.cap() - 1];
