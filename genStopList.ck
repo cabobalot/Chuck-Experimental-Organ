@@ -7,7 +7,7 @@ harmonic series base
 
 example:
 chuck genStopList.ck:Great:2:1
-/*
+*/
 
 FileIO fout;
 
