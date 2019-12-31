@@ -32,9 +32,11 @@ public class StopList {
 		
 	}
 
-	fun void playNote(int note) {
+	fun void playNote(int note, int channel) {
 		for (0 => int i; i < stops.cap(); i++) {
-			stops[i].startNote(note);
+			if (stops[i].MIDIChannel == channel) {
+				stops[i].startNote(note);
+			}
 		}
 		if ((note > 0) && (note < noteStates.cap())) {
 			1 => noteStates[note];
@@ -42,9 +44,11 @@ public class StopList {
 		
 	}
 
-	fun void stopNote(int note) {
+	fun void stopNote(int note, int channel) {
 		for (0 => int i; i < stops.cap(); i++) {
-			stops[i].stopNote(note);
+			if (stops[i].MIDIChannel == channel) {
+				stops[i].stopNote(note);
+			}
 		}
 		if ((note > 0) && (note < noteStates.cap())) {
 			0 => noteStates[note];
@@ -65,18 +69,21 @@ public class StopList {
 		}
 		string val;
 		string trash;
+		int MIDIChannel; //keyboard
 		int harmonic;
-		int baseNumber;
+		float baseNumber;
 		float volume;
 		while( file => trash ) {
 			file => trash;
+			file => trash;
+			file => MIDIChannel;
 			file => baseNumber;
 			file => harmonic;
 			file => volume;
 			file => trash;
 
 			Stop newStop;
-			newStop.setup(gain, baseNumber, harmonic, volume);
+			newStop.setup(gain, baseNumber, harmonic, volume, MIDIChannel);
 
 			(stops.cap() + 1) => stops.size;
 			newStop @=> stops[stops.cap() - 1];

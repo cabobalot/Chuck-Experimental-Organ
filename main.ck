@@ -58,17 +58,19 @@ fun int keyboardHandler() {
 		min => now;
 		// potentially more than 1 key at a time
 		while(min.recv(msg)) {
-			if(msg.data1 == 144) { // keyboard note event
+			if ((msg.data1 >= 0x80) && (msg.data1 < 0x90)) { //note off
+				((msg.data1 - 0x80) + 1) => int channel;
 				msg.data2 => int noteNum;
-				
-				if (msg.data3 > 0) {
-					<<< "key down: ",  noteNum >>>;
-					stoplist.playNote(noteNum);
-				}
-				else {
-					<<< "key up: ",  noteNum >>>;
-					stoplist.stopNote(noteNum);
-				}
+
+				<<< "key up: ",  noteNum , "channel: ", channel >>>;
+				stoplist.stopNote(noteNum, channel);
+			}
+			if ((msg.data1 >= 0x90) && (msg.data1 < 0xA0)) { //note on
+				((msg.data1 - 0x90) + 1) => int channel;
+				msg.data2 => int noteNum;
+
+				<<< "key down: ",  noteNum , "channel: ", channel >>>;
+				stoplist.playNote(noteNum, channel);
 			}
 		}
 	}

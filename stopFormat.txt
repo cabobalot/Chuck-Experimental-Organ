@@ -1,0 +1,7 @@
+name
+feet for display
+keyboard name/label
+keyboard midi num
+harmonic series base
+harmonic number
+volume

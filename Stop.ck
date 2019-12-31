@@ -10,11 +10,13 @@ public class Stop {
 	0 => int harmNum;
 	0 => int isNoteOn;
 	0 => int isActivated;
+	0 => int MIDIChannel;
 
-	fun void setup(Gain g, int baseNum, int harmonic, float volume) {
+	fun void setup(Gain g, float baseNum, int harmonic, float volume, int channel) {
 		harmonic => harmNum;
 		g @=> outGain;
 		volume => myGain.gain;
+		channel => MIDIChannel;
 		if (harmonic > 0) {
 			for (0 => int i; i < notes.cap(); i++) {
 				(Std.mtof(i) * harmNum * baseNum) => notes[i].freq;
@@ -28,7 +30,7 @@ public class Stop {
 			}
 		}
 
-		<<< "Stop.setup" , harmNum >>>;
+		<<< "Stop.setup" , harmNum , MIDIChannel >>>;
 	}
 
 	fun void activate() {
@@ -65,5 +67,9 @@ public class Stop {
 		for (0 => int i; i < notes.cap(); i++) {
 			notes[i] =< myGain;
 		}
+	}
+
+	fun int getChannel() {
+		return MIDIChannel;
 	}
 }
