@@ -1,1 +1,0 @@
-Std.system("JavaStopJamb.jar");

@@ -1,6 +1,0 @@
-class polly {
-
-	fun go() {
-		
-	}
-}
