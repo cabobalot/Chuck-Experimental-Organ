@@ -17,7 +17,7 @@ public class Stop {
 		g @=> outGain;
 		volume => myGain.gain;
 		channel => MIDIChannel;
-		if (harmonic > 0) {
+		if (baseNum > 0) {
 			for (0 => int i; i < notes.cap(); i++) {
 				(Std.mtof(i) * harmNum * baseNum) => notes[i].freq;
 				0 => noteStates[i];
@@ -30,7 +30,7 @@ public class Stop {
 			}
 		}
 
-		<<< "Stop.setup" , harmNum , MIDIChannel >>>;
+		<<< "Stop setup-- harm: " , harmNum , "Base: ", baseNum , "Channel: " , MIDIChannel >>>;
 	}
 
 	fun void activate() {

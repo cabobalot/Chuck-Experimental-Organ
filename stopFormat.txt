@@ -2,6 +2,6 @@ name
 feet for display
 keyboard name/label
 keyboard midi num
-harmonic series base
+harmonic series base (neg for undertone)
 harmonic number
 volume
