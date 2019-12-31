@@ -1,3 +1,14 @@
+//Creates a list of stops following a spesific harmonic.
+/*
+Run with three arguments:
+keyboard name/label
+keyboard midi channel num
+harmonic series base
+
+example:
+chuck genStopList.ck:Great:2:1
+/*
+
 FileIO fout;
 
 // open for write
@@ -75,7 +86,6 @@ volume
 if(me.args()) {
 	if (Std.atoi(me.arg(2)) > 0) {
 		for (0 => int i; i < (overtoneNames.cap() / 2); i++) {
-			"" => string copy;
 			fout <= overtoneNames[i * 2] <= IO.newline();
 			fout <= overtoneNames[(i * 2) + 1] <= IO.newline();
 			fout <= me.arg(0) <= IO.newline();
@@ -88,7 +98,6 @@ if(me.args()) {
 	}
 	else {
 		for (0 => int i; i < (undertoneNames.cap() / 2); i++) {
-			"" => string copy;
 			fout <= undertoneNames[i * 2] <= IO.newline();
 			fout <= undertoneNames[(i * 2) + 1] <= IO.newline();
 			fout <= me.arg(0) <= IO.newline();
