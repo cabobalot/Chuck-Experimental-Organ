@@ -3,7 +3,7 @@
 Run with three arguments:
 keyboard name/label
 keyboard midi channel num
-harmonic series base
+harmonic series base feet (negitave for undertones)
 
 example:
 chuck genStopList.ck:Great:2:1
@@ -22,40 +22,24 @@ if(!fout.good()) {
 
 [
 	"Unison",
-	"8",
 	"Octave",
-	"4",
 	"Nasard-12th",
-	"2-2/3",
 	"Octave-15th",
-	"2",
 	"Tierce-17th",
-	"1-3/5",
 	"Larigot-19t",
-	"1-1/3",
 	"Septime-21st-(flat)",
-	"1-1/7",
-	"Octave-22nd",
-	"1"
+	"Octave-22nd"
 ] @=> string overtoneNames[];
 
 [
 	"Under-Base",
-	"2",
 	"Under-Octave",
-	"4",
 	"Under-Nasard",
-	"6",
 	"Under-Super-Octave",
-	"8",
 	"Under-Tierce",
-	"10",
 	"Under-Larigot",
-	"12",
 	"Under-Septime",
-	"14",
-	"Under-Super-Duper-Octave",
-	"16"
+	"Under-Super-Duper-Octave"
 ] @=> string undertoneNames[];
 
 [
@@ -68,6 +52,14 @@ if(!fout.good()) {
 	0.15,
 	0.1
 ] @=> float volumes[];
+
+float feetPresets[0];
+0.25  => feetPresets["32"];
+0.5  => feetPresets["16"];
+1 => feetPresets["8"];
+2 => feetPresets["4"];
+3 => feetPresets["2"];
+4 => feetPresets["1"];
 
 /*
 
@@ -85,24 +77,24 @@ volume
 
 if(me.args()) {
 	if (Std.atoi(me.arg(2)) > 0) {
-		for (0 => int i; i < (overtoneNames.cap() / 2); i++) {
-			fout <= overtoneNames[i * 2] <= IO.newline();
-			fout <= overtoneNames[(i * 2) + 1] <= IO.newline();
+		for (0 => int i; i < overtoneNames.cap(); i++) {
+			fout <= overtoneNames[i] <= IO.newline();
+			fout <= simpleFraction(Std.atoi(me.arg(2)), i + 1) <= IO.newline();
 			fout <= me.arg(0) <= IO.newline();
 			fout <= me.arg(1) <= IO.newline();
-			fout <= me.arg(2) <= IO.newline();
+			fout <= feetPresets[me.arg(2)] <= IO.newline();
 			fout <= i + 1 <= IO.newline();
 			fout <= volumes[i] <= IO.newline();
 			fout <= "=" <= IO.newline();
 		}
 	}
 	else {
-		for (0 => int i; i < (undertoneNames.cap() / 2); i++) {
-			fout <= undertoneNames[i * 2] <= IO.newline();
-			fout <= undertoneNames[(i * 2) + 1] <= IO.newline();
+		for (0 => int i; i < undertoneNames.cap(); i++) {
+			fout <= undertoneNames[i] <= IO.newline();
+			fout <= -Std.atoi(me.arg(2)) * (i + 1) <= IO.newline();
 			fout <= me.arg(0) <= IO.newline();
 			fout <= me.arg(1) <= IO.newline();
-			fout <= me.arg(2) <= IO.newline();
+			fout <= -feetPresets["" + (-Std.atoi(me.arg(2)))] <= IO.newline();
 			fout <= i + 1 <= IO.newline();
 			fout <= volumes[i] <= IO.newline();
 			fout <= "=" <= IO.newline();
@@ -117,3 +109,24 @@ else {
 
 // close file
 fout.close();
+
+
+fun string simpleFraction(int top, int bottom) {
+	
+	top => int numerator;
+	bottom => int denominator;
+
+	(top / bottom) => int wholePart;
+	top % bottom => numerator;
+
+	if (numerator > 0) {
+		return "" + wholePart + "-" + numerator + "/" + denominator;
+	}
+	else {
+		return "" + wholePart;
+	}
+
+	
+}
+
+

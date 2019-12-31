@@ -25,7 +25,7 @@ public class Stop {
 		}
 		else {
 			for (0 => int i; i < notes.cap(); i++) {
-				((Std.mtof(i) * 4) / (-harmNum)) => notes[i].freq;
+				((Std.mtof(i) * (-baseNum)) / (harmNum)) => notes[i].freq;
 				0 => noteStates[i];
 			}
 		}
