@@ -1,6 +1,9 @@
 
 Gain gain => dac;
 
+Shred shreds[0];
+me @=> Shred @ mainShred;
+
 0.01 => gain.gain;
 
 StopList stoplist;
@@ -16,13 +19,17 @@ MidiIn min;
 MidiMsg msg;
 
 // open the device
-if( !min.open( device ) ) me.exit();
-<<< "MIDI device:", min.num(), " -> ", min.name() >>>;
+if( !min.open( device ) ) {
+	// me.exit();
+	<<< "MIDI device", device, "failed to open." >>>;
+} else {
+	<<< "MIDI device:", min.num(), " -> ", min.name() >>>;
+	spork ~ keyboardHandler();
+	
+}
 
-
-spork ~ keyboardHandler();
-spork ~ stopOSCHandler();
 spork ~ runJavaWindow();
+spork ~ stopOSCHandler();
 
 // time-loop
 
@@ -39,6 +46,8 @@ fun int stopOSCHandler() {
 	OscMsg msg;
 	4446 => oin.port;
 	oin.addAddress( "/stop/set, ii" );
+	oin.addAddress( "/stop/program, ii" );
+
 
 	while(true) {
 		oin => now;
@@ -47,7 +56,12 @@ fun int stopOSCHandler() {
 			<<< msg.address >>>;
 			<<< msg.getInt(0) >>>;
 			<<< msg.getInt(1) >>>;
-			stoplist.setStopActive(msg.getInt(0), msg.getInt(1));
+			if (msg.address == "/stop/set") {
+				stoplist.setStopActive(msg.getInt(0), msg.getInt(1));
+			}
+			else if (msg.address == "/stop/program") {
+				mainShred.exit();
+			}
 		}
 	}
 }
