@@ -34,7 +34,8 @@ spork ~ stopOSCHandler();
 // time-loop
 
 while (true) {
-    1::second => now;
+    100::ms => now;
+	// <<< gain.last() >>>;
 }
 
 fun int runJavaWindow() {

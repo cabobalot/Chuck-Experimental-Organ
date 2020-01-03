@@ -6,11 +6,6 @@ public class StopList {
 	0 => int STOP_COUNT;
 	Stop @ stops[STOP_COUNT];
 
-	200 => int NUM_NOTES;
-	int noteStates[NUM_NOTES];
-
-
-
 	fun void giveGain(Gain g) {
 		g @=> gain;
 
@@ -20,11 +15,6 @@ public class StopList {
 	fun void setStopActive(int stopNum, int setVal) {
 		if (setVal == 1) {
 			stops[stopNum].activate();
-			for (0 => int i; i < noteStates.cap(); i++) {
-				if (noteStates[i]) {
-					stops[stopNum].startNote(i);
-				}
-			}
 		}
 		if (setVal == 0) {
 			stops[stopNum].deactivate();
@@ -38,9 +28,6 @@ public class StopList {
 				stops[i].startNote(note);
 			}
 		}
-		if ((note > 0) && (note < noteStates.cap())) {
-			1 => noteStates[note];
-		}
 		
 	}
 
@@ -49,9 +36,6 @@ public class StopList {
 			if (stops[i].MIDIChannel == channel) {
 				stops[i].stopNote(note);
 			}
-		}
-		if ((note > 0) && (note < noteStates.cap())) {
-			0 => noteStates[note];
 		}
 	}
 
