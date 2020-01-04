@@ -9,24 +9,20 @@ me @=> Shred @ mainShred;
 StopList stoplist;
 stoplist.giveGain(gain);
 
-// number of the MIDI device to open (see: chuck --probe)
-0 => int device;
-// get command line
-if( me.args() ) me.arg(0) => Std.atoi => device;
-// the midi event
-MidiIn min;
-// the message for retrieving data
-MidiMsg msg;
+// HID
+Hid kb;
+HidMsg msg;
 
-// open the device
-if( !min.open( device ) ) {
-	// me.exit();
-	<<< "MIDI device", device, "failed to open." >>>;
-} else {
-	<<< "MIDI device:", min.num(), " -> ", min.name() >>>;
-	spork ~ keyboardHandler();
-	
-}
+// which keyboard
+// number of the device to open (see: chuck --probe)
+0 => int device;
+// get from command line
+if( me.args() ) me.arg(0) => Std.atoi => device;
+
+// open keyboard (get device number from command line)
+if( !kb.openKeyboard( device ) ) me.exit();
+<<< "keyboard '" + kb.name() + "' ready", "" >>>;
+spork ~ keyboardHandler();
 
 spork ~ runJavaWindow();
 spork ~ stopOSCHandler();
@@ -70,22 +66,22 @@ fun int stopOSCHandler() {
 fun int keyboardHandler() {
 	while(true) {
 		// wait on kbhit event
-		min => now;
+		kb => now;
 		// potentially more than 1 key at a time
-		while(min.recv(msg)) {
-			if ((msg.data1 >= 0x80) && (msg.data1 < 0x90)) { //note off
-				((msg.data1 - 0x80) + 1) => int channel;
-				msg.data2 => int noteNum;
+		while(kb.recv(msg)) {
+			if(msg.isButtonDown()) {
+				msg.which => int dataNum;
+				<<< "key down: ",  dataNum >>>;
 
-				<<< "key up: ",  noteNum , "channel: ", channel >>>;
-				stoplist.stopNote(noteNum, channel);
+				40 +=> dataNum;
+				stoplist.playNote(dataNum, 5); // 5 is keyboard 1
+
 			}
-			if ((msg.data1 >= 0x90) && (msg.data1 < 0xA0)) { //note on
-				((msg.data1 - 0x90) + 1) => int channel;
-				msg.data2 => int noteNum;
-
-				<<< "key down: ",  noteNum , "channel: ", channel >>>;
-				stoplist.playNote(noteNum, channel);
+			else {
+				msg.which => int dataNum;
+				<<< "key up: ",  dataNum >>>;
+				40 +=> dataNum;
+				stoplist.stopNote(dataNum, 5); // 5 is keyboard 1
 			}
 		}
 	}
