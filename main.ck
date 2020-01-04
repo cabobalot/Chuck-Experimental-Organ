@@ -30,7 +30,8 @@ spork ~ stopOSCHandler();
 // time-loop
 
 while (true) {
-    100::ms => now;
+	1::second => now;
+    // 100::ms => now;
 	// <<< gain.last() >>>;
 }
 
