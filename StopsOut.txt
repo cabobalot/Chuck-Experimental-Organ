@@ -2,7 +2,7 @@ Under-Base
 2
 Pedal
 3
--3
+-4
 1
 0.9
 =
@@ -10,7 +10,7 @@ Under-Octave
 4
 Pedal
 3
--3
+-4
 2
 0.7
 =
@@ -18,7 +18,7 @@ Under-Nasard
 6
 Pedal
 3
--3
+-4
 3
 0.5
 =
@@ -26,7 +26,7 @@ Under-Super-Octave
 8
 Pedal
 3
--3
+-4
 4
 0.35
 =
@@ -34,7 +34,7 @@ Under-Tierce
 10
 Pedal
 3
--3
+-4
 5
 0.25
 =
@@ -42,7 +42,7 @@ Under-Larigot
 12
 Pedal
 3
--3
+-4
 6
 0.2
 =
@@ -50,7 +50,7 @@ Under-Septime
 14
 Pedal
 3
--3
+-4
 7
 0.15
 =
@@ -58,7 +58,7 @@ Under-Super-Duper-Octave
 16
 Pedal
 3
--3
+-4
 8
 0.1
 =

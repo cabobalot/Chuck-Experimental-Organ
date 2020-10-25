@@ -15,6 +15,9 @@ public class Stop {
 		harmonic => harmNum;
 		g @=> outGain;
 		volume => myGain.gain;
+		if (channel == 3) {
+			volume * 2 => myGain.gain;
+		}
 		channel => MIDIChannel;
 		if (baseNum > 0) {
 			for (0 => int i; i < notes.cap(); i++) {

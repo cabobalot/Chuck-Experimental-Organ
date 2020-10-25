@@ -58,8 +58,8 @@ float feetPresets[0];
 0.5  => feetPresets["16"];
 1 => feetPresets["8"];
 2 => feetPresets["4"];
-3 => feetPresets["2"];
-4 => feetPresets["1"];
+4 => feetPresets["2"];
+8 => feetPresets["1"];
 
 /*
 
