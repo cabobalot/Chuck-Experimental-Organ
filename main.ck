@@ -39,7 +39,7 @@ while (true) {
 }
 
 fun int runJavaWindow() {
-	Std.system("START /B JavaStopJamb.jar");
+	Std.system("start java -jar JavaStopJamb.jar");
 }
 
 fun int stopOSCHandler() {
