@@ -1,9 +1,9 @@
-//Creates a list of stops following a spesific harmonic.
+//Creates a list of stops following a specific harmonic.
 /*
 Run with three arguments:
 keyboard name/label
 keyboard midi channel num
-harmonic series base feet (negitave for undertones)
+harmonic series base feet (negative for undertones)
 
 example:
 chuck genStopList.ck:Great:2:1

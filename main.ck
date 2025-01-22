@@ -38,11 +38,12 @@ while (true) {
 	// <<< gain.last() >>>;
 }
 
-fun int runJavaWindow() {
-	Std.system("start java -jar JavaStopJamb.jar");
+// may have to use "start java -jar JavaStopJamb.jar" on windows?
+fun void runJavaWindow() {
+	Std.system("java -jar JavaStopJamb.jar");
 }
 
-fun int stopOSCHandler() {
+fun void stopOSCHandler() {
 	OscIn oin;
 	OscMsg msg;
 	4446 => oin.port;
@@ -67,7 +68,7 @@ fun int stopOSCHandler() {
 	}
 }
 
-fun int keyboardHandler() {
+fun void keyboardHandler() {
 	while(true) {
 		// wait on kbhit event
 		min => now;
