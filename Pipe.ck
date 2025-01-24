@@ -5,7 +5,7 @@ public class Pipe extends Chugraph {
 
 	ADSR env(50::ms, 30::ms, 0.95, 30::ms);
 
-	//sustain and main envelope
+	//sustain and envelope
     Phasor drive => Gen10 sustain => env => Gain g;
 
 	ChiffWind wind => g;
@@ -56,6 +56,13 @@ public class Pipe extends Chugraph {
 		env.keyOff();
 		wind.keyOff();
     }
+
+	fun dur getDecayTime() {
+		if (env.decayTime() > 30::ms) {
+			return env.decayTime();
+		}
+		return 30::ms;
+	}
 
 	// larger beginning waver? 
 	// 100::ms => dur t;

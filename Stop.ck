@@ -28,8 +28,6 @@ public class Stop {
 			else {
 				((Std.mtof(i) * (-baseNum)) / (harmNum)) => notes[i].freq;
 			}
-			notes[i] => myGain;
-			
 		}
 
 		<<< "Stop setup-- harm: " , harmNum , "Base: ", baseNum , "Channel: " , MIDIChannel >>>;
@@ -37,17 +35,18 @@ public class Stop {
 
 	fun void activate() {
 		1 => isActivated;
-		myGain => outGain;
+		myGain => outGain; // this is gonna clip...
 	}
 
 	fun void deactivate() {
 		0 => isActivated;
 		myGain =< outGain;
-		// stopAllNotes();
+		stopAllNotes(); // this is gonna clip...
 	}
 
 	fun void startNote(int number) {
 		if ((number < NUM_NOTES) && (number >= 0) && isActivated) {
+			notes[number] => myGain;
 			notes[number].startNote();
 		}
 	}
@@ -55,13 +54,20 @@ public class Stop {
 	fun void stopNote(int number) {
 		if ((number < NUM_NOTES) && (number >= 0) && isActivated) {
 			notes[number].stopNote();
+			spork ~ unpatchLater(number, now + notes[number].getDecayTime());
 		}
 	}
 
 	fun void stopAllNotes() {
 		for (0 => int i; i < notes.cap(); i++) {
-			notes[i] =< myGain;
+			// notes[i] =< myGain;
+			stopNote(i);
 		}
+	}
+
+	fun void unpatchLater(int number, time when) {
+		when => now;
+		notes[number] =< myGain;
 	}
 
 	fun int getChannel() {

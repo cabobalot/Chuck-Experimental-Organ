@@ -1,12 +1,15 @@
 
 @import "StopList.ck"
 
-Gain gain => dac;
+Gain gain => GVerb rev => dac;
+0.3 => rev.dry;
+100 => rev.roomsize;
+2::second => rev.revtime;
 
 Shred shreds[0];
 me @=> Shred @ mainShred;
 
-0.01 => gain.gain;
+0.1 => gain.gain;
 
 StopList stoplist;
 stoplist.giveGain(gain);
