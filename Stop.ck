@@ -1,9 +1,10 @@
+@import "Pipe.ck"
+
 public class Stop {
 
 	100 => int NUM_NOTES;
 
-	SinOsc s;
-	SinOsc notes[NUM_NOTES];
+	Pipe notes[NUM_NOTES];
 	Gain @ outGain;
 	Gain myGain;
 	0 => int harmNum;
@@ -19,15 +20,16 @@ public class Stop {
 			volume * 2 => myGain.gain;
 		}
 		channel => MIDIChannel;
-		if (baseNum > 0) {
-			for (0 => int i; i < notes.cap(); i++) {
+
+		for (0 => int i; i < notes.cap(); i++) {
+			if (baseNum > 0) {
 				(Std.mtof(i) * harmNum * baseNum) => notes[i].freq;
 			}
-		}
-		else {
-			for (0 => int i; i < notes.cap(); i++) {
+			else {
 				((Std.mtof(i) * (-baseNum)) / (harmNum)) => notes[i].freq;
 			}
+			notes[i] => myGain;
+			
 		}
 
 		<<< "Stop setup-- harm: " , harmNum , "Base: ", baseNum , "Channel: " , MIDIChannel >>>;
@@ -46,13 +48,13 @@ public class Stop {
 
 	fun void startNote(int number) {
 		if ((number < NUM_NOTES) && (number >= 0) && isActivated) {
-			notes[number] => myGain;
+			notes[number].startNote();
 		}
 	}
 
 	fun void stopNote(int number) {
 		if ((number < NUM_NOTES) && (number >= 0) && isActivated) {
-			notes[number] =< myGain;
+			notes[number].stopNote();
 		}
 	}
 

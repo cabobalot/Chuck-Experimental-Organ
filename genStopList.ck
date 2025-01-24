@@ -6,7 +6,7 @@ keyboard midi channel num
 harmonic series base feet (negative for undertones)
 
 example:
-chuck genStopList.ck:Great:2:1
+chuck genStopList.ck:Great:2:8
 */
 
 FileIO fout;

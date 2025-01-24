@@ -5,6 +5,6 @@ It works like a normal pipe organ, adding stops adds more to the tone of the key
 
 install chuck and run
 
-chuck Stop.ck StopList.ck main.ck --caution-to-the-wind
+chuck main.ck --caution-to-the-wind
 
 

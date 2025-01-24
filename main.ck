@@ -1,4 +1,6 @@
 
+@import "StopList.ck"
+
 Gain gain => dac;
 
 Shred shreds[0];
@@ -40,7 +42,7 @@ while (true) {
 
 // may have to use "start java -jar JavaStopJamb.jar" on windows?
 fun void runJavaWindow() {
-	Std.system("java -jar JavaStopJamb.jar");
+	Std.system("java -jar JavaStopJamb.jar &");
 }
 
 fun void stopOSCHandler() {
@@ -74,19 +76,23 @@ fun void keyboardHandler() {
 		min => now;
 		// potentially more than 1 key at a time
 		while(min.recv(msg)) {
-			if ((msg.data1 >= 0x80) && (msg.data1 < 0x90)) { //note off
-				((msg.data1 - 0x80) + 1) => int channel;
-				msg.data2 => int noteNum;
+			(msg.data1 & 0xF0) >> 4 => int message;
+			msg.data1 & 0xF => int channel;
+			msg.data2 => int noteNum;
 
+			if (message == 0x8) { //note off
 				<<< "key up: ",  noteNum , "channel: ", channel >>>;
 				stoplist.stopNote(noteNum, channel);
 			}
-			if ((msg.data1 >= 0x90) && (msg.data1 < 0xA0)) { //note on
-				((msg.data1 - 0x90) + 1) => int channel;
-				msg.data2 => int noteNum;
-
-				<<< "key down: ",  noteNum , "channel: ", channel >>>;
-				stoplist.playNote(noteNum, channel);
+			else if (message == 0x9) { //note on
+				if (msg.data3 == 0) { // zero velocity
+					<<< "zero vel: ",  noteNum , "channel: ", channel >>>;
+					stoplist.stopNote(noteNum, channel);
+				}
+				else {
+					<<< "key down: ",  noteNum , "channel: ", channel >>>;
+					stoplist.playNote(noteNum, channel);
+				}
 			}
 		}
 	}

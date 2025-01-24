@@ -1,3 +1,6 @@
+
+@import "Stop.ck"
+
 public class StopList {
 
 	Gain @ gain;
