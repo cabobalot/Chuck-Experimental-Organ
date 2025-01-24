@@ -1,22 +1,21 @@
 @import "Pipe.ck"
 
-public class Stop {
+public class Stop extends Chugraph {
 
 	100 => int NUM_NOTES;
 
-	Pipe notes[NUM_NOTES];
-	Gain @ outGain;
+	// pass the noise along
+	inlet => Pipe notes[NUM_NOTES];
 	Gain myGain;
 	0 => int harmNum;
 	0 => int isNoteOn;
 	0 => int isActivated;
 	0 => int MIDIChannel;
 
-	fun void setup(Gain g, float baseNum, int harmonic, float volume, int channel) {
+	fun void Stop(float baseNum, int harmonic, float volume, int channel) {
 		harmonic => harmNum;
-		g @=> outGain;
 		volume => myGain.gain;
-		if (channel == 3) {
+		if (channel == 3) { // is this for pedal or something ?
 			volume * 2 => myGain.gain;
 		}
 		channel => MIDIChannel;
@@ -35,12 +34,12 @@ public class Stop {
 
 	fun void activate() {
 		1 => isActivated;
-		myGain => outGain; // this is gonna clip...
+		myGain => outlet; // this is gonna clip...
 	}
 
 	fun void deactivate() {
 		0 => isActivated;
-		myGain =< outGain;
+		myGain =< outlet;
 		stopAllNotes(); // this is gonna clip...
 	}
 

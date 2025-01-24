@@ -5,15 +5,18 @@ public class Pipe extends Chugraph {
 
 	ADSR env(50::ms, 30::ms, 0.95, 30::ms);
 
+	// Noise n;
+	inlet => UGen n;
+
 	//sustain and envelope
     Phasor drive => Gen10 sustain => env => Gain g;
 
-	ChiffWind wind => g;
+	n => ChiffWind wind => g;
 	wind.gain(1);
 
     g.gain(0.1);
 
-	Noise n => LPF waver;
+	n => LPF waver;
 	waver.Q(20);
 	waver.freq(3);
 	Gain mix;
@@ -76,9 +79,8 @@ public class Pipe extends Chugraph {
 
 }
 
+// expects a noise through inlet
 class ChiffWind extends Chugraph {
-	Noise n;
-
 	ADSR windEnv(10::ms, 50::ms, 0.90, 30::ms);
 	LPF lpf;
 	15000 => lpf.freq;
@@ -97,12 +99,11 @@ class ChiffWind extends Chugraph {
     ResonZ f;
     50 => f.Q;
 
-	n => f => chiffEnv => outlet;
+	inlet => f => chiffEnv => outlet;
 
 	for( int i; i < fs.size(); i++ ) {
-		// set filter Q (higher == narrower, sharper resonance)
 		30 => fs[i].Q; // set filter Q (higher == narrower, sharper resonance)
-		n => fs[i] => lpf;
+		inlet => fs[i] => lpf;
 	}
 
 
@@ -114,7 +115,6 @@ class ChiffWind extends Chugraph {
         freq * 15 => f.freq;
 
 		return freq;
-
 	}
 
 	fun void keyOn() {
@@ -129,10 +129,10 @@ class ChiffWind extends Chugraph {
 }
 
 class Rectifier extends Chugen {
-    7 => float n;
+    7 => float order;
 
     fun float tick( float in ) {
-        return (in + n - 1) / n;
+        return (in + order - 1) / order;
     }
 }
 

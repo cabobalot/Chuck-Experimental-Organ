@@ -1,17 +1,15 @@
 
 @import "Stop.ck"
 
-public class StopList {
-
-	Gain @ gain;
+public class StopList extends Chugraph {
 
 	//stops
 	0 => int STOP_COUNT;
 	Stop @ stops[STOP_COUNT];
 
-	fun void giveGain(Gain g) {
-		g @=> gain;
+	Noise noise; // single noise source for whole organ
 
+	fun void StopList() {
 		readStopFile();
 	}
 
@@ -54,6 +52,7 @@ public class StopList {
 			<<< "can't open file: " , filename , " for reading..." >>>;
 			me.exit();
 		}
+		
 		string val;
 		string trash;
 		int MIDIChannel; //keyboard
@@ -69,11 +68,10 @@ public class StopList {
 			file => volume;
 			file => trash;
 
-			Stop newStop;
-			newStop.setup(gain, baseNumber, harmonic, volume, MIDIChannel);
+			noise => Stop newStop(baseNumber, harmonic, volume, MIDIChannel) => outlet;
 
-			(stops.cap() + 1) => stops.size;
-			newStop @=> stops[stops.cap() - 1];
+			(stops.size() + 1) => stops.size;
+			newStop @=> stops[stops.size() - 1];
 		}
 	}
 }

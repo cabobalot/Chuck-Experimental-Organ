@@ -1,7 +1,7 @@
 
 @import "StopList.ck"
 
-Gain gain => GVerb rev => dac;
+StopList stoplist => GVerb rev => dac;
 0.3 => rev.dry;
 100 => rev.roomsize;
 2::second => rev.revtime;
@@ -9,10 +9,8 @@ Gain gain => GVerb rev => dac;
 Shred shreds[0];
 me @=> Shred @ mainShred;
 
-0.1 => gain.gain;
+0.1 => stoplist.gain;
 
-StopList stoplist;
-stoplist.giveGain(gain);
 
 // number of the MIDI device to open (see: chuck --probe)
 0 => int device;
