@@ -1,11 +1,11 @@
 // attempt to synthesize an organ pipe artificially
 
+@import "ChiffWind.ck"
 
 public class Pipe extends Chugraph {
 
 	ADSR env(50::ms, 30::ms, 0.95, 30::ms);
 
-	// Noise n;
 	inlet => UGen n;
 
 	//sustain and envelope
@@ -79,54 +79,7 @@ public class Pipe extends Chugraph {
 
 }
 
-// expects a noise through inlet
-class ChiffWind extends Chugraph {
-	ADSR windEnv(10::ms, 50::ms, 0.90, 30::ms);
-	LPF lpf;
-	15000 => lpf.freq;
-	windEnv.gain(0.15);
 
-	lpf => windEnv => outlet;
-	
-
-	ResonZ fs[5]; // for sure too slow
-
-
-	// chiff
-	// n.gain(0.5);
-	ADSR chiffEnv(20::ms, 90::ms, 0.05, 5::ms);
-	chiffEnv.gain(0.6);
-    ResonZ f;
-    50 => f.Q;
-
-	inlet => f => chiffEnv => outlet;
-
-	for( int i; i < fs.size(); i++ ) {
-		30 => fs[i].Q; // set filter Q (higher == narrower, sharper resonance)
-		inlet => fs[i] => lpf;
-	}
-
-
-	fun float setFreq(float freq) {
-		for( int i; i < fs.size(); i++ ) {
-			freq * i => fs[i].freq;
-		}
-
-        freq * 15 => f.freq;
-
-		return freq;
-	}
-
-	fun void keyOn() {
-		windEnv.keyOn();
-		chiffEnv.keyOn();
-	}
-
-	fun void keyOff() {
-		windEnv.keyOff();
-		chiffEnv.keyOff();
-	}
-}
 
 // this is way too slow
 class Waver extends Chugen {
