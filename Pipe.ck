@@ -11,21 +11,21 @@ public class Pipe extends Chugraph {
 	//sustain and envelope
     Phasor drive => Gen10 sustain => env => Gain g;
 
-	n => ChiffWind wind => g;
+
+	n => ChiffWind wind;
+	wind => g;
 	wind.gain(1);
 
     g.gain(0.1);
 
-	n => LPF waver;
-	waver.Q(20);
-	waver.freq(3);
-	Gain mix;
-	mix.op(3); // multiply mode
-	waver => Rectifier r => mix;
+	// maybe this is too slow?
+	// Gain mix;
+	// mix.op(3); // multiply mode
+	// Waver wav => mix;
 
-	g => mix;
+	// g => mix => outlet;
+	g => outlet;
 
-	mix => outlet;
 
     // load up the coeffs; amplitudes for successive partials
     sustain.coefs( [0.14, 0.13, 0.095, 0.035, 0.014] );
@@ -89,7 +89,7 @@ class ChiffWind extends Chugraph {
 	lpf => windEnv => outlet;
 	
 
-	ResonZ fs[10];
+	ResonZ fs[5]; // for sure too slow
 
 
 	// chiff
@@ -128,6 +128,34 @@ class ChiffWind extends Chugraph {
 	}
 }
 
+// this is way too slow
+class Waver extends Chugen {
+    1 => int direction;
+
+    fun float tick( float in ) {
+
+        if (Math.random() < 5000000) {
+			-direction => direction;
+		}
+
+        last() + (Math.random2f(0.0, 0.0002) * (direction)) => float out;
+
+        if (out > 1) {
+			1 => out;
+            -1 => direction;
+		}
+		if (out < 0.85) {
+			0.85 => out;
+            1 => direction;
+		}
+
+        return out;
+    }
+
+}
+
+
+// even more too slow
 class Rectifier extends Chugen {
     7 => float order;
 
